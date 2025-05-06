@@ -1,6 +1,4 @@
-from typing import Dict
 from fastapi import APIRouter, HTTPException
-
 from app.models.note import Note
 from app.models.noteCreate import NoteCreate
 import json
