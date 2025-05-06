@@ -29,7 +29,7 @@ notes = load_notes()
 note_id_counter = max(notes.keys(), default=0) + 1
 
 
-@notes_router.post("/notes/")
+@notes_router.post("/notes/", status_code=201)
 def create_notes(note: NoteCreate):
     # récupérer la variable déclarée en dehors de la fonction
     global note_id_counter
@@ -64,7 +64,7 @@ def update_note(id: int, update_note: NoteCreate):
     save_notes()
     return updated_note
 
-@notes_router.delete("/notes/{id}")
+@notes_router.delete("/notes/{id}", status_code=204)
 def delete_note(id: int): 
     if id not in notes:
       raise HTTPException(status_code=404, detail="Note not found")

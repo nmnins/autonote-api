@@ -1,0 +1,38 @@
+name: CI – AutoNote
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+    ci:  
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Téléchargement du code source
+          uses: actions/checkout@v3
+
+        - name: Installation de Python 3.11
+          uses: actions/setup-python@v4
+          with:
+            python-version: '3.11'
+
+        - name:  Installation des dépendances
+          run: |
+            pip install --upgrade pip
+            pip install -r requirements.txt
+            pip install -r requirements-dev.txt
+
+        - name: Lint
+          run: flake8 app/ tests/
+
+        - name: Tests + Couverture
+          run: pytest --cov=app --cov-report=term-missing --cov-fail-under=80
+
+        - name: Sécurité
+          run: bandit -r app/
+
+        - name:  Audit des dépendances
+          run: pip-audit
