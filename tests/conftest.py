@@ -9,10 +9,8 @@ from pathlib import Path
 # éxécuté automatiquement avant chaque test avec autouse=True
 @pytest.fixture(autouse=True)
 def fake_data_file():
-  # Créer un fichier temporaire JSON vide
-    with tempfile.NamedTemporaryFile(
-        delete=False, mode="w+", suffix=".json"
-    ) as tmp:
+    # Créer un fichier temporaire JSON vide
+    with tempfile.NamedTemporaryFile(delete=False, mode="w+", suffix=".json") as tmp:
         json.dump({}, tmp)
         tmp_path = tmp.name
 
