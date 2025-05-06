@@ -10,4 +10,4 @@ pip_audit==2.9.0
 pip-api==0.0.34
 rich==14.0.0
 ruff==0.11.8
-
+setuptools==65.5.1
