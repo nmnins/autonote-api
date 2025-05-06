@@ -2,8 +2,9 @@ import tempfile
 import json
 import os
 import pytest
-from app.routes import notes  
+from app.routes import notes
 from pathlib import Path
+
 
 # éxécuté automatiquement avant chaque test avec autouse=True
 @pytest.fixture(autouse=True)

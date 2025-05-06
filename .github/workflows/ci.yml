@@ -25,6 +25,9 @@ jobs:
             pip install -r requirements.txt
             pip install -r requirements-dev.txt
 
+        - name:  Format code (black)
+          run: black --check .
+          
         - name: Lint
           run: flake8 app/ tests/
 
