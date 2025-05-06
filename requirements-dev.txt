@@ -1,8 +1,4 @@
 bandit==1.8.3
-flake8==7.2.0
-mccabe==0.7.0
-pycodestyle==2.13.0
-pyflakes==3.3.2
 
 pytest==8.3.5
 pytest-cov==6.1.1
@@ -13,4 +9,4 @@ pluggy==1.5.0
 pip_audit==2.9.0
 pip-api==0.0.34
 rich==14.0.0
-black
+

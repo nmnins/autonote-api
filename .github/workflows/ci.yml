@@ -25,12 +25,9 @@ jobs:
             pip install -r requirements.txt
             pip install -r requirements-dev.txt
 
-        - name:  Format code (black)
-          run: black --check .
+        - name: Lint code (ruff)
+          run: ruff check . --output-format=github
           
-        - name: Lint
-          run: flake8 app/ tests/
-
         - name: Tests + Couverture
           run: pytest --cov=app --cov-report=term-missing --cov-fail-under=80
 
