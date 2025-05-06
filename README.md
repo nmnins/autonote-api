@@ -36,6 +36,9 @@ source venv/bin/activate
 pip install -r requirements.txt
 pip install -r requirements-dev.txt
 ```
+
+📌 Si vous êtes sous Windows, exécutez `env\Scripts\activate` au lieu de `source env/bin/activate`.
+
 ---
 
 ##  Lancer les tests
