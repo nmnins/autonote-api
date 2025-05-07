@@ -1,29 +1,25 @@
 import tempfile
-import json
-import os
 import pytest
-from app.routes import notes
-from pathlib import Path
+from sqlmodel import SQLModel, create_engine, Session
+from fastapi.testclient import TestClient
+from app.main import app
+from app.models.note import Note
 
+# Créer un fichier temporaire SQLite
+def override_get_engine():
+    tmp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".db")
+    engine = create_engine(f"sqlite:///{tmp_file.name}", connect_args={"check_same_thread": False})
+    SQLModel.metadata.create_all(engine)
+    return engine
 
-# éxécuté automatiquement avant chaque test avec autouse=True
-@pytest.fixture(autouse=True)
-def fake_data_file():
-  # Créer un fichier temporaire JSON vide
-    with tempfile.NamedTemporaryFile(
-        delete=False, mode="w+", suffix=".json"
-    ) as tmp:
-        json.dump({}, tmp)
-        tmp_path = tmp.name
+# Override la DB de l'app pour les tests
+engine = override_get_engine()
 
-    # Remplacer DATA_FILE par le fichier temporaire
-    notes.DATA_FILE = Path(tmp_path)
+@app.on_event("startup")
+def startup_override():
+    app.state.db_engine = engine
 
-    # Recharger les notes à partir de ce fichier
-    notes.notes = notes.load_notes()
-    notes.note_id_counter = max(notes.notes.keys(), default=0) + 1
-
-    yield
-
-    # Nettoyage après le test
-    os.remove(tmp_path)
+@pytest.fixture
+def client():
+    with TestClient(app) as c:
+        yield c

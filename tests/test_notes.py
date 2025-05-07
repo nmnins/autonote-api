@@ -4,7 +4,7 @@ from app.main import app
 client = TestClient(app)
 
 
-def test_create_notes():
+def test_create_notes(client):
     response = client.post("/notes", json={"content": "Bonjour"})
     assert response.status_code == 201
     data = response.json()
@@ -12,7 +12,7 @@ def test_create_notes():
     assert data["content"] == "Bonjour"
 
 
-def test_get_all_notes():
+def test_get_all_notes(client):
     client.post("/notes", json={"content": "Hello"})
     response = client.get("/notes")
     assert response.status_code == 200
@@ -22,7 +22,7 @@ def test_get_all_notes():
     assert notes[0]["content"] == "Hello"
 
 
-def test_get_note():
+def test_get_note(client):
     # créer d'abord une note à tester
     create = client.post("/notes", json={"content": "Test Notes"})
     note_id = create.json()["id"]
@@ -32,7 +32,7 @@ def test_get_note():
     assert response.json()["id"] == note_id
 
 
-def test_delete_item():
+def test_delete_item(client):
     # Creer d'abord une note à supprimer
     create = client.post("/notes", json={"content": "Note à supp"})
     note_id = create.json()["id"]
