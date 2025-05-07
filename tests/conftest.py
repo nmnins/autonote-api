@@ -1,9 +1,9 @@
 import tempfile
 import pytest
-from sqlmodel import SQLModel, create_engine, Session
+from sqlmodel import SQLModel, create_engine
 from fastapi.testclient import TestClient
 from app.main import app
-from app.models.note import Note
+
 
 # Créer un fichier temporaire SQLite
 def override_get_engine():
