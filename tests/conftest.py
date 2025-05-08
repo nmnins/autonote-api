@@ -1,25 +1,44 @@
+import os
+
+os.environ["API_KEY"] = "testApiKey123"
 import tempfile
 import pytest
 from sqlmodel import SQLModel, create_engine
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from app.main import app
+from contextlib import asynccontextmanager
+
+from app.routes.notes import notes_router
 
 
-# Créer un fichier temporaire SQLite
-def override_get_engine():
+
+
+
+# Headers pour les tests
+def auth_headers(valid=True):
+    return {"x-api-key": os.environ["API_KEY"] if valid else "wrongkey"}
+
+# Connexion db pour les tests
+def get_test_engine():
     tmp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".db")
     engine = create_engine(f"sqlite:///{tmp_file.name}", connect_args={"check_same_thread": False})
     SQLModel.metadata.create_all(engine)
     return engine
 
-# Override la DB de l'app pour les tests
-engine = override_get_engine()
-
-@app.on_event("startup")
-def startup_override():
-    app.state.db_engine = engine
-
+# instance de fast api pr les tests
 @pytest.fixture
 def client():
-    with TestClient(app) as c:
-        yield c
+    engine = get_test_engine()
+
+    @asynccontextmanager
+    async def lifespan(app: FastAPI):
+        app.state.db_engine = engine
+        yield
+
+    app = FastAPI(lifespan=lifespan)
+    app.include_router(notes_router)
+ 
+
+    with TestClient(app) as test_client:
+        test_client.auth_headers = auth_headers
+        yield test_client

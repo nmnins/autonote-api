@@ -4,9 +4,9 @@ from dotenv import load_dotenv
 
 load_dotenv()  
 
-API_KEY = os.getenv("API_KEY")
 
-def verify_api_key(request: Request):
+def verify_api_key(request: Request): 
+    API_KEY = os.getenv("API_KEY")
     header_key = request.headers.get("x-api-key")
     if header_key != API_KEY:
         raise HTTPException(
