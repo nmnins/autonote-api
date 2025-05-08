@@ -3,3 +3,4 @@ pytest-cov
 httpx
 ruff
 python-dotenv
+setuptools==65.5.1
