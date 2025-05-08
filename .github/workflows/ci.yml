@@ -7,32 +7,35 @@ on:
     branches: [develop]
 
 jobs:
-    ci:  
-      runs-on: ubuntu-latest
+  build-and-test:
+    runs-on: ubuntu-latest
 
-      steps:
-        - name: Téléchargement du code source
-          uses: actions/checkout@v3
+    steps:
+      - name:  Checkout code
+        uses: actions/checkout@v3
 
-        - name: Installation de Python 3.11
-          uses: actions/setup-python@v4
-          with:
-            python-version: '3.11'
+      - name:  Docker build (valide le Dockerfile)
+        run: docker build -t autonote-api .
 
-        - name:  Installation des dépendances
-          run: |
-            pip install --upgrade pip
-            pip install -r requirements.txt
-            pip install -r requirements-dev.txt
+      - name:  Setup Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
 
-        - name: Lint code (ruff)
-          run: ruff check . --output-format=github
-          
-        - name: Tests + Couverture
-          run: pytest --cov=app --cov-report=term-missing --cov-fail-under=50
+      - name:  Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
 
-        - name: Sécurité
-          run: bandit -r app/
+      - name:  Run tests with coverage
+        run: pytest --cov=app --cov-report=term-missing --cov-fail-under=50
 
-        - name:  Audit des dépendances
-          run: pip-audit
+      - name:  Lint (ruff)
+        run: ruff check . --output-format=github
+
+      - name:  Bandit (security)
+        run: bandit -r app/
+
+      - name:  pip-audit (dependency check)
+        run: pip-audit
