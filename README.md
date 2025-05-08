@@ -6,7 +6,7 @@ Elle permet de créer, consulter et supprimer des messages techniques via des en
 Ce projet m’a servi de base pour mettre en place :
 - des tests unitaires avec **Pytest**
 - un pipeline CI complet avec **GitHub Actions**
-- une analyse automatique de style, couverture, sécurité (**DevSecOps**)
+- une analyse automatique de style, couverture, sécurité 
 - la création d'une **image Docker** fonctionnelle
 
 ---
