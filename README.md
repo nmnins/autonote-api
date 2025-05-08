@@ -1,12 +1,13 @@
 # 📝 AutoNote
 
-AutoNote est une petite API REST construite avec FastAPI.  
-Elle permet de créer, consulter et supprimer des messages textes techniques via des endpoints HTTP.
+AutoNote est une petite API REST construite avec **FastAPI**.  
+Elle permet de créer, consulter et supprimer des messages techniques via des endpoints HTTP.
 
 Ce projet m’a servi de base pour mettre en place :
-- des tests unitaires avec Pytest
-- un pipeline CI complet avec GitHub Actions
-- des vérifications automatiques de style, de couverture et de sécurité (approche DevSecOps)
+- des tests unitaires avec **Pytest**
+- un pipeline CI complet avec **GitHub Actions**
+- une analyse automatique de style, couverture, sécurité (**DevSecOps**)
+- la création d'une **image Docker** fonctionnelle
 
 ---
 
@@ -14,15 +15,15 @@ Ce projet m’a servi de base pour mettre en place :
 
 ---
 
-## 🚀 Fonctionnalités actuelles
+## 🚀 Fonctionnalités
 
 - `POST /notes` : ajouter une note
 - `GET /notes` : lister toutes les notes
 - `GET /notes/{id}` : récupérer une note par ID
 - `DELETE /notes/{id}` : supprimer une note
 
-📌 Les notes sont stockées temporairement dans un fichier JSON local.  
-📌 Il n’y a pas encore d’authentification ni de base de données.
+📌 Les notes sont stockées localement dans une base **SQLite** via `SQLModel`.  
+🔐 Toutes les routes sont sécurisées par une **clé API** via le header `x-api-key`.
 
 ---
 
@@ -31,8 +32,8 @@ Ce projet m’a servi de base pour mettre en place :
 ```bash
 git clone https://github.com/ines835/autonote-api.git
 cd autonote-api
-python -m venv venv
-source venv/bin/activate
+python -m venv env
+source env/bin/activate
 pip install -r requirements.txt
 pip install -r requirements-dev.txt
 ```
@@ -49,6 +50,19 @@ pytest --cov=app --cov-report=term-missing
 
 ---
 
+## Utiliser Docker 
+
+docker build -t autonote-api .
+
+docker run -p 8000:8000 --env-file .env autonote-api
+
+
+## Variables d'environnement 
+
+API_KEY=votre_clé_secrète
+DATABASE_URL=sqlite:///./notes.db
+
+
 ## CI & sécurité
 
 Le projet inclut un pipeline GitHub Actions qui vérifie automatiquement :
@@ -61,7 +75,9 @@ Le projet inclut un pipeline GitHub Actions qui vérifie automatiquement :
 
 ✅ les vulnérabilités des dépendances via pip-audit
 
-📁 Le fichier du pipeline se trouve dans .github/workflows/ci.yml
+✅ la validité du Dockerfile via docker build
+
+📄 Pipeline : .github/workflows/ci.yml
 
 ---
 
@@ -69,26 +85,31 @@ Le projet inclut un pipeline GitHub Actions qui vérifie automatiquement :
 
 ```text
 autonote-api/
-├── app/               # Code principal (routes, modèles)
-├── tests/             # Tests unitaires
-├── requirements.txt   # Dépendances de production
-├── requirements-dev.txt # Dépendances de développement
-├── README.md          # Vous êtes ici :)
+├── app/                   # Code principal (routes, modèles, logique)
+├── tests/                 # Tests unitaires
+├── requirements.txt       # Dépendances de production
+├── requirements-dev.txt   # Dépendances de développement
+├── Dockerfile             # Image Docker de l'app
+├── .env                   # Variables d'environnement (non versionné)
+├── README.md              # ➤ Vous êtes ici :)
 └── .github/
     └── workflows/
-        └── ci.yml     # Pipeline CI GitHub Actions
+        └── ci.yml         # Pipeline CI GitHub Actions
+
 ```
 --- 
 
 ## Limitations actuelles
 
-Pas encore d’authentification
+Pas encore de base PostgreSQL (prévu via Terraform)
 
-Pas de base de données
+API non encore déployée (à venir sur AWS)
 
-Pas encore dockerisé
+Pas de tests de bout en bout (API live)
 
-API non déployée
+Pas encore de monitoring ni de logging avancé
+
+
 
 --- 
 
