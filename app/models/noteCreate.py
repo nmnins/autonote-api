@@ -1,5 +1,5 @@
-from pydantic import BaseModel, Field
+from sqlmodel import SQLModel, Field
 
 
-class NoteCreate(BaseModel):
+class NoteCreate(SQLModel):
     content: str = Field(..., min_length=5, max_length=100)

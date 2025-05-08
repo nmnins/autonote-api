@@ -1,29 +1,44 @@
-import tempfile
-import json
 import os
+
+os.environ["API_KEY"] = "testApiKey123"
+import tempfile
 import pytest
-from app.routes import notes
-from pathlib import Path
+from sqlmodel import SQLModel, create_engine
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
+from contextlib import asynccontextmanager
+
+from app.routes.notes import notes_router
 
 
-# éxécuté automatiquement avant chaque test avec autouse=True
-@pytest.fixture(autouse=True)
-def fake_data_file():
-  # Créer un fichier temporaire JSON vide
-    with tempfile.NamedTemporaryFile(
-        delete=False, mode="w+", suffix=".json"
-    ) as tmp:
-        json.dump({}, tmp)
-        tmp_path = tmp.name
 
-    # Remplacer DATA_FILE par le fichier temporaire
-    notes.DATA_FILE = Path(tmp_path)
 
-    # Recharger les notes à partir de ce fichier
-    notes.notes = notes.load_notes()
-    notes.note_id_counter = max(notes.notes.keys(), default=0) + 1
 
-    yield
+# Headers pour les tests
+def auth_headers(valid=True):
+    return {"x-api-key": os.environ["API_KEY"] if valid else "wrongkey"}
 
-    # Nettoyage après le test
-    os.remove(tmp_path)
+# Connexion db pour les tests
+def get_test_engine():
+    tmp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".db")
+    engine = create_engine(f"sqlite:///{tmp_file.name}", connect_args={"check_same_thread": False})
+    SQLModel.metadata.create_all(engine)
+    return engine
+
+# instance de fast api pr les tests
+@pytest.fixture
+def client():
+    engine = get_test_engine()
+
+    @asynccontextmanager
+    async def lifespan(app: FastAPI):
+        app.state.db_engine = engine
+        yield
+
+    app = FastAPI(lifespan=lifespan)
+    app.include_router(notes_router)
+ 
+
+    with TestClient(app) as test_client:
+        test_client.auth_headers = auth_headers
+        yield test_client
