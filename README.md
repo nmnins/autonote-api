@@ -6,8 +6,7 @@ Elle permet de créer, consulter et supprimer des messages textes techniques via
 Ce projet m’a servi de base pour mettre en place :
 - des tests unitaires avec Pytest
 - un pipeline CI complet avec GitHub Actions
-- des vérifications automatiques de style, de couverture et de sécurité (approche DevSecOps)
-
+- des vérifications automatiques de style, de couverture et de sécurité 
 ---
 
 ![CI](https://github.com/ines835/autonote-api/actions/workflows/ci.yml/badge.svg)
