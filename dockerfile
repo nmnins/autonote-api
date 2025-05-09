@@ -14,6 +14,9 @@ RUN pip install --no-cache-dir --upgrade pip \
 # Étape 5 : copier le reste du code
 COPY . .
 
+# copie du script wait attente de la db
+RUN chmod +x /app/wait-for-it.sh
+
 # Étape 6 : exposer le port de l’API
 EXPOSE 8000
 

@@ -4,3 +4,4 @@ httpx
 ruff
 python-dotenv
 setuptools==65.5.1
+psycopg2-binary

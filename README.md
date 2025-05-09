@@ -51,15 +51,16 @@ pytest --cov=app --cov-report=term-missing
 ---
 
 ## Utiliser Docker 
-
+```bash
 docker build -t autonote-api .
 
 docker run -p 8000:8000 --env-file .env autonote-api
-
+```
 
 ## Variables d'environnement 
 
 API_KEY=votre_clé_secrète
+
 DATABASE_URL=sqlite:///./notes.db
 
 
