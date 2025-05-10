@@ -1,19 +1,21 @@
 # 📝 AutoNote
 
-AutoNote est une petite API REST construite avec **FastAPI**.  
-Elle permet de créer, consulter et supprimer des messages techniques via des endpoints HTTP.
+AutoNote est une API REST légère construite avec **FastAPI**.  
+Elle permet de créer, consulter et supprimer des messages via des endpoints HTTP.
 
-Ce projet m’a servi de base pour mettre en place :
-- des tests unitaires avec **Pytest**
-- un pipeline CI complet avec **GitHub Actions**
-- une analyse automatique de style, couverture, sécurité 
-- la création d'une **image Docker** fonctionnelle
-- le provisionnement de base de données sur AWS via **Terraform**
-- la préparation au déploiement sur **EC2 AWS**
+Ce projet m’a permis de mettre en pratique les compétences suivantes :
+
+- Tests unitaires automatisés avec **Pytest**
+- Pipeline CI complet avec **GitHub Actions**
+- Analyse de code (qualité, couverture, sécurité)
+- Conteneurisation avec **Docker**
+- Provisionnement cloud avec **Terraform**
+- Déploiement d’une base PostgreSQL sur **AWS RDS**
+- Préparation au déploiement sur **EC2 AWS**
 
 ---
 
-![CI](https://github.com/ines835/autonote-api/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/nmnins/autonote-api/actions/workflows/ci.yml/badge.svg)
 
 ---
 
@@ -22,21 +24,17 @@ Ce projet m’a servi de base pour mettre en place :
 - `POST /notes` : ajouter une note
 - `GET /notes` : lister toutes les notes
 - `GET /notes/{id}` : récupérer une note par ID
+- `PUT /notes/{id}` : modifier une note
 - `DELETE /notes/{id}` : supprimer une note
 
+🔐 Toutes les routes sont sécurisées par une **clé API** transmise via le header `x-api-key`.
 
-🔐 Toutes les routes sont sécurisées par une **clé API** via le header `x-api-key`.
-
-
-📌 Les notes sont désormais stockées dans une **base PostgreSQL hébergée sur AWS RDS**, provisionnée via Terraform.  
-✅ Le passage de SQLite à PostgreSQL est complet.
-
----
+📦 Les données sont stockées dans une **base PostgreSQL AWS RDS**, provisionnée automatiquement via Terraform.  
 
 ## ⚙️ Installation locale
 
 ```bash
-git clone https://github.com/ines835/autonote-api.git
+git clone https://github.com/nmnins/autonote-api.git
 cd autonote-api
 python -m venv env
 source env/bin/activate
@@ -44,110 +42,94 @@ pip install -r requirements.txt
 pip install -r requirements-dev.txt
 ```
 
-📌 Si vous êtes sous Windows, exécutez `env\Scripts\activate` au lieu de `source env/bin/activate`.
+## Sous Windows 
+```bash
+env\Scripts\activate
+```
 
----
-
-##  Lancer les tests
+## Lancer les tests
 
 ```bash
 pytest --cov=app --cov-report=term-missing
 ```
 
----
+## Utilisation avec Docker
 
-## Utiliser Docker 
 ```bash
-docker build -t autonote-api .
-
-docker run -p 8000:8000 --env-file .env autonote-api
+docker compose up --build
 ```
 
-## Infrastructure Terraform 
+##  Infrastructure AWS via Terraform
 
 Le dossier terraform/ contient :
 
-Provisionnement RDS PostgreSQL
+Provisionnement automatique d'une instance RDS PostgreSQL
 
-Sécurité (Security Group)
+Configuration du Security Group AWS
 
-Variables versionnées
 
-## CI & sécurité
+## CI & Sécurité
 
-Le projet inclut un pipeline GitHub Actions qui vérifie automatiquement :
+Le pipeline GitHub Actions vérifie à chaque push :
 
-✅ la qualité du code avec ruff
+Style et erreurs avec ruff
 
-✅ la couverture des tests avec pytest-cov
+Couverture des tests avec pytest-cov
 
-✅ la sécurité du code Python avec bandit
+Vulnérabilités avec bandit et pip-audit
 
-✅ les vulnérabilités des dépendances via pip-audit
-
-✅ la validité du Dockerfile via docker build
+Validité du Dockerfile avec docker build
 
 📄 Pipeline : .github/workflows/ci.yml
-
----
 
 
 ## Structure du projet
 
-```text
 autonote-api/
-├── app/                   # Code principal (routes, modèles, logique)
-├── tests/                 # Tests unitaires
-├── requirements.txt       # Dépendances de production
-├── requirements-dev.txt   # Dépendances de développement
-├── Dockerfile             # Image Docker de l'app
-├── .env                   # Variables d'environnement (non versionné)
-├── README.md              # ➤ Vous êtes ici :)
+├── app/                  # Code principal (routes, modèles, logique)
+├── tests/                # Tests unitaires
+├── Dockerfile            # Image Docker de l'app
+├── Docker-compose        # Définition de la stack 
+├── .env                  # Variables d'environnement (non versionnées)
+├── .env.example          # Exemple de fichier .env
+├── terraform/            # Infrastructure RDS (Terraform)
+├── requirements*.txt     # Dépendances (prod/dev)
 └── .github/
     └── workflows/
-        └── ci.yml         # Pipeline CI GitHub Actions
+        └── ci.yml        # Pipeline CI GitHub Actions
 
-```
---- 
+
 
 ## Sécurité
 
-Les secrets ne sont pas versionnés
+Secrets gérés localement via .env
 
-.env est exclu du dépôt
+Accès PostgreSQL RDS restreint à l’IP personnelle
 
-Un exemple .env.example est fourni
+Aucune donnée sensible stockée dans le dépôt
 
-Accès PostgreSQL via Security Group limité à l’IP personnelle
+## Prochaines étapes
 
+ Déploiement complet de l’API sur AWS EC2
 
+ Ajout d’un endpoint /health pour la supervision
 
+ Centralisation des logs + monitoring via CloudWatch
 
-## 🔜 Prochaines étapes
+ Mise en place de tests d’intégration live
 
- Déploiement complet de l’API sur EC2 AWS
+ Ajout de tests de montée en charge (Locust)
 
- Ajout d’une route /health pour supervision
-
- Monitoring (CloudWatch) et logs centralisés
-
- Mise en place de tests d’intégration/API live
-
- Ajout de tests de charge avec Locust
-
-
---- 
 
 ## À propos
 
-Ce projet fait partie de mon apprentissage DevSecOps.
-Il est conçu comme une base solide pour :
+Projet personnel pour expérimenter  :
 
-Dockerisation
+Infrastructure as Code (Terraform)
 
-CI/CD
+Conteneurisation et orchestration (Docker & Compose)
 
-Sécurité
+Cloud AWS (EC2, RDS, IAM, Security Groups)
 
-Infrastructure as Code
+Mon objectif : construire une stack complète prête pour la prod, avec CI/CD et bonnes pratiques DevOps.
 
