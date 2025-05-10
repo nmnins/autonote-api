@@ -13,12 +13,12 @@ def test_create_notes_authorized(client):
     
 def test_create_notes_with_invalid_key(client):
     response = client.post("/notes", headers=client.auth_headers(valid=False), json={"content": "Test mauvaise clé"})
-    assert response.status_code == 401 
+    assert response.status_code == 403 
 
 
 def test_create_notes(client):
     response = client.post("/notes", json={"content": "Bonjour"})
-    assert response.status_code == 401
+    assert response.status_code == 403
    
 
 
@@ -35,13 +35,13 @@ def test_get_all_notes_authorized(client):
 def test_get_all_notes_with_invalid_key(client):
     client.post("/notes", headers=auth_headers(), json={"content": "Hello"})
     response = client.get("/notes", headers=auth_headers(valid=False))
-    assert response.status_code == 401
+    assert response.status_code == 403
 
 
 def test_get_all_notes(client):
     client.post("/notes", headers=auth_headers(),json={"content": "Hello"})
     response = client.get("/notes")
-    assert response.status_code == 401
+    assert response.status_code == 403
    
 
    
@@ -58,7 +58,7 @@ def test_get_note_with_invalid_key(client):
     create = client.post("/notes", headers=auth_headers(), json={"content": "Test Notes"})
     note_id = create.json()["id"]
     response = client.get(f"/notes/{note_id}", headers=auth_headers(valid=False))
-    assert response.status_code == 401
+    assert response.status_code == 403
  
 
    
@@ -66,7 +66,7 @@ def test_get_note(client):
     create = client.post("/notes", headers=auth_headers(), json={"content": "Test Notes"})
     note_id = create.json()["id"]
     response = client.get(f"/notes/{note_id}")
-    assert response.status_code == 401
+    assert response.status_code == 403
 
 
 def test_delete_item_authorized(client):
@@ -88,7 +88,7 @@ def test_delete_item_with_invalid_key(client):
     note_id = create.json()["id"]
 
     response = client.delete(f"/notes/{note_id}", headers=auth_headers(valid=False))
-    assert response.status_code == 401
+    assert response.status_code == 403
 
 
 
@@ -99,4 +99,4 @@ def test_delete_item(client):
     note_id = create.json()["id"]
 
     response = client.delete(f"/notes/{note_id}")
-    assert response.status_code == 401
+    assert response.status_code == 403
