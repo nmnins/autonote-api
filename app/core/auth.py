@@ -6,10 +6,12 @@ load_dotenv()
 
 
 def verify_api_key(request: Request): 
-    API_KEY = os.getenv("API_KEY")
-    header_key = request.headers.get("x-api-key")
-    if header_key != API_KEY:
+    expected_api_key = os.getenv("API_KEY")
+    provided_api_key = request.headers.get("x-api-key")
+    if not expected_api_key:
+        raise RuntimeError("API_KEY non défini dans l'environnement")
+    if not provided_api_key or provided_api_key != expected_api_key:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Clé API invalide",
-        )
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Clé API invalide ou absente.",
+    )

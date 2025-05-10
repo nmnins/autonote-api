@@ -1,24 +1,21 @@
-# Étape 1 : utiliser une image Python légère
+# J'utilise une image python légère 
 FROM python:3.13.3-slim
 
-# Étape 2 : définir le répertoire de travail
+# Je définis le répertoire de travail
 WORKDIR /app
 
-# Étape 3 : copier requirements d’abord pour profiter du cache
+# Je copie requirements.txt qui contient les dépendances
 COPY requirements.txt .
 
-# Étape 4 : installer les dépendances
+# J'installe les dépendances sans stocker de cache local (réduit le poids de l'image)
 RUN pip install --no-cache-dir --upgrade pip \
  && pip install --no-cache-dir -r requirements.txt
 
-# Étape 5 : copier le reste du code
+# Je copie le reste du code
 COPY . .
 
-# copie du script wait attente de la db
-RUN chmod +x /app/wait-for-it.sh
-
-# Étape 6 : exposer le port de l’API
+# J'expose le port de l'api 
 EXPOSE 8000
 
-# Étape 7 : commande de lancement avec Uvicorn
+# Je lance l'app avec uvicorn 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

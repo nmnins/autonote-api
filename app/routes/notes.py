@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlmodel import Session, select
 from app.models.note import Note
@@ -14,7 +15,13 @@ notes_router = APIRouter(prefix="/notes", dependencies=[Depends(verify_api_key)]
 def create_notes(note: NoteCreate, request: Request ):
     engine = request.app.state.db_engine
     with Session(engine) as session: 
-        new_note = Note(content=note.content)
+        new_note = Note(
+            title=note.title,
+            content=note.content,
+            tags=note.tags,
+            author=note.author,
+            created_at=datetime.now(timezone.utc)
+        )
         session.add(new_note)
         session.commit()
         session.refresh(new_note)
@@ -45,7 +52,11 @@ def update_note(id: int, update_note: NoteCreate, request: Request):
         note = session.get(Note, id)
         if not note: 
             raise HTTPException(status_code=404, detail="Note non trouvée")
+        note.title = update_note.title
         note.content = update_note.content
+        note.tags = update_note.tags
+        note.author = update_note.author
+        note.updated_at = datetime.now(timezone.utc)
         session.commit()
         session.refresh(note)
     return note
