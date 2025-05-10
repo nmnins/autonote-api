@@ -1,5 +1,9 @@
-from sqlmodel import SQLModel, Field
+from typing import Optional
+from sqlmodel import SQLModel
 
 
 class NoteCreate(SQLModel):
-    content: str = Field(..., min_length=5, max_length=100)
+    title: str
+    content: str
+    tags: Optional[str] = None
+    author: Optional[str] = None

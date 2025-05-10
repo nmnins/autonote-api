@@ -8,6 +8,7 @@ from fastapi.openapi.utils import get_openapi
 
 api_key_header = APIKeyHeader(name="x-api-key", auto_error=False)
 
+
 def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
@@ -18,11 +19,7 @@ def custom_openapi():
         routes=app.routes,
     )
     openapi_schema["components"]["securitySchemes"] = {
-        "APIKeyHeader": {
-            "type": "apiKey",
-            "in": "header",
-            "name": "x-api-key"
-        }
+        "APIKeyHeader": {"type": "apiKey", "in": "header", "name": "x-api-key"}
     }
     for path in openapi_schema["paths"].values():
         for method in path.values():

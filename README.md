@@ -62,6 +62,7 @@ docker build -t autonote-api .
 
 docker run -p 8000:8000 --env-file .env autonote-api
 ```
+
 ## Infrastructure Terraform 
 
 Le dossier terraform/ contient :

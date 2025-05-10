@@ -10,3 +10,11 @@ tests/
 .vscode/
 .idea/
 .DS_Store
+terraform/
+*.tf
+*.tfvars
+*.tfstate*
+.terraform/
+.dockerignore
+docker-compose.yml
+docker-compose.override.yml
