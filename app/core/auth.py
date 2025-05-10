@@ -2,10 +2,10 @@ from fastapi import Request, HTTPException, status
 import os
 from dotenv import load_dotenv
 
-load_dotenv()  
+load_dotenv()
 
 
-def verify_api_key(request: Request): 
+def verify_api_key(request: Request):
     expected_api_key = os.getenv("API_KEY")
     provided_api_key = request.headers.get("x-api-key")
     if not expected_api_key:
@@ -14,4 +14,4 @@ def verify_api_key(request: Request):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Clé API invalide ou absente.",
-    )
+        )

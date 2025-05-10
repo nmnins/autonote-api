@@ -7,20 +7,19 @@ from fastapi import status
 from app.core.auth import verify_api_key
 
 
-
 notes_router = APIRouter(prefix="/notes", dependencies=[Depends(verify_api_key)])
 
 
 @notes_router.post("/", status_code=201, response_model=Note)
-def create_notes(note: NoteCreate, request: Request ):
+def create_notes(note: NoteCreate, request: Request):
     engine = request.app.state.db_engine
-    with Session(engine) as session: 
+    with Session(engine) as session:
         new_note = Note(
             title=note.title,
             content=note.content,
             tags=note.tags,
             author=note.author,
-            created_at=datetime.now(timezone.utc)
+            created_at=datetime.now(timezone.utc),
         )
         session.add(new_note)
         session.commit()
@@ -35,10 +34,11 @@ def get_all_notes(request: Request):
         result = session.exec(select(Note)).all()
     return result
 
+
 @notes_router.get("/{id}", response_model=Note)
 def get_note(id: int, request: Request):
     engine = request.app.state.db_engine
-    with Session(engine) as session: 
+    with Session(engine) as session:
         note = session.get(Note, id)
         if not note:
             raise HTTPException(status_code=404, detail="Note non trouvée")
@@ -48,9 +48,9 @@ def get_note(id: int, request: Request):
 @notes_router.put("/{id}", response_model=Note)
 def update_note(id: int, update_note: NoteCreate, request: Request):
     engine = request.app.state.db_engine
-    with Session(engine) as session: 
+    with Session(engine) as session:
         note = session.get(Note, id)
-        if not note: 
+        if not note:
             raise HTTPException(status_code=404, detail="Note non trouvée")
         note.title = update_note.title
         note.content = update_note.content
