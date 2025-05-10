@@ -84,7 +84,7 @@ Validité du Dockerfile avec docker build
 
 
 ## Structure du projet
-
+```text
 autonote-api/
 ├── app/                  # Code principal (routes, modèles, logique)
 ├── tests/                # Tests unitaires
@@ -97,7 +97,7 @@ autonote-api/
 └── .github/
     └── workflows/
         └── ci.yml        # Pipeline CI GitHub Actions
-
+```
 
 
 ## Sécurité
