@@ -8,6 +8,8 @@ Ce projet m’a servi de base pour mettre en place :
 - un pipeline CI complet avec **GitHub Actions**
 - une analyse automatique de style, couverture, sécurité 
 - la création d'une **image Docker** fonctionnelle
+- le provisionnement de base de données sur AWS via **Terraform**
+- la préparation au déploiement sur **EC2 AWS**
 
 ---
 
@@ -22,8 +24,12 @@ Ce projet m’a servi de base pour mettre en place :
 - `GET /notes/{id}` : récupérer une note par ID
 - `DELETE /notes/{id}` : supprimer une note
 
-📌 Les notes sont stockées localement dans une base **SQLite** via `SQLModel`.  
+
 🔐 Toutes les routes sont sécurisées par une **clé API** via le header `x-api-key`.
+
+
+📌 Les notes sont désormais stockées dans une **base PostgreSQL hébergée sur AWS RDS**, provisionnée via Terraform.  
+✅ Le passage de SQLite à PostgreSQL est complet.
 
 ---
 
@@ -57,12 +63,15 @@ docker build -t autonote-api .
 docker run -p 8000:8000 --env-file .env autonote-api
 ```
 
-## Variables d'environnement 
+## Infrastructure Terraform 
 
-API_KEY=votre_clé_secrète
+Le dossier terraform/ contient :
 
-DATABASE_URL=sqlite:///./notes.db
+Provisionnement RDS PostgreSQL
 
+Sécurité (Security Group)
+
+Variables versionnées
 
 ## CI & sécurité
 
@@ -82,6 +91,7 @@ Le projet inclut un pipeline GitHub Actions qui vérifie automatiquement :
 
 ---
 
+
 ## Structure du projet
 
 ```text
@@ -100,16 +110,30 @@ autonote-api/
 ```
 --- 
 
-## Limitations actuelles
+## Sécurité
 
-Pas encore de base PostgreSQL (prévu via Terraform)
+Les secrets ne sont pas versionnés
 
-API non encore déployée (à venir sur AWS)
+.env est exclu du dépôt
 
-Pas de tests de bout en bout (API live)
+Un exemple .env.example est fourni
 
-Pas encore de monitoring ni de logging avancé
+Accès PostgreSQL via Security Group limité à l’IP personnelle
 
+
+
+
+## 🔜 Prochaines étapes
+
+ Déploiement complet de l’API sur EC2 AWS
+
+ Ajout d’une route /health pour supervision
+
+ Monitoring (CloudWatch) et logs centralisés
+
+ Mise en place de tests d’intégration/API live
+
+ Ajout de tests de charge avec Locust
 
 
 --- 
@@ -117,4 +141,13 @@ Pas encore de monitoring ni de logging avancé
 ## À propos
 
 Ce projet fait partie de mon apprentissage DevSecOps.
-Je l'utilise comme base de travail pour expérimenter les tests, la qualité du code et l'intégration continue dans un projet Python minimal.
+Il est conçu comme une base solide pour :
+
+Dockerisation
+
+CI/CD
+
+Sécurité
+
+Infrastructure as Code
+
