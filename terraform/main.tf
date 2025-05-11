@@ -86,6 +86,6 @@ resource "aws_instance" "autonote_ec2" {
   subnet_id              = var.subnet_id
   user_data              = file("./user_data.sh")  
   tags                   = {
-    Name = "autonote-ec2"
+    Name = "autonote-app-ec2"
   }
 }
