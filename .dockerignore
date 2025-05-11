@@ -18,3 +18,5 @@ terraform/
 .dockerignore
 docker-compose.yml
 docker-compose.override.yml
+*.pem
+user_data.sh
