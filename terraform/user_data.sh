@@ -28,12 +28,6 @@ sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin d
 sudo systemctl enable docker
 sudo systemctl start docker
 
-# install de docker compose
-DOCKER_CONFIG=/usr/libexec/docker/cli-plugins
-mkdir -p $DOCKER_CONFIG
-curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/docker-compose
-chmod +x $DOCKER_CONFIG/docker-compose
-
 # clone de mon dépot
 cd /home/ubuntu
 git clone https://github.com/nmnins/autonote-api.git
