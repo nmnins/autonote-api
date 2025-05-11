@@ -19,7 +19,7 @@ resource "aws_security_group" "rds_access" {
     protocol        = "tcp"
     security_groups = [aws_security_group.ec2_sg.id]
     description     = "Autorise EC2 a acceder a RDS"
-    
+
   }
 
 
