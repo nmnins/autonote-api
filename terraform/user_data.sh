@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Supprimer les anciennes versions
-sudo apt remove -y docker docker-engine docker.io containerd runc
-
 # MAJ système
 sudo apt update -y
 sudo apt upgrade -y
