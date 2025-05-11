@@ -1,29 +1,21 @@
 #!/bin/bash
 
-# MAJ système
-sudo apt update -y
-sudo apt upgrade -y
+# mise à jour des paquets
+apt update -y
+apt upgrade -y
 
-# Dépendances pour ajouter le repo Docker
-sudo apt install -y ca-certificates curl gnupg lsb-release
+# installation de docker et de git
+apt install -y docker.io git
 
-# Ajouter la clé GPG officielle de Docker
-sudo mkdir -m 0755 -p /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+# je démarre docker
+systemctl start docker
+systemctl enable docker
 
-# Ajouter le dépôt Docker officiel
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-# Mettre à jour les dépôts et installer Docker
-sudo apt update -y
-sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-# Démarrer Docker
-sudo systemctl enable docker
-sudo systemctl start docker
+# install de docker compose
+DOCKER_CONFIG=/usr/libexec/docker/cli-plugins
+mkdir -p $DOCKER_CONFIG
+curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/docker-compose
+chmod +x $DOCKER_CONFIG/docker-compose
 
 # clone de mon dépot
 cd /home/ubuntu
