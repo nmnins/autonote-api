@@ -1,15 +1,32 @@
 #!/bin/bash
 
-# mise à jour des paquets
-apt update -y
-apt upgrade -y
+# Supprimer les anciennes versions
+sudo apt remove -y docker docker-engine docker.io containerd runc
 
-# installation de docker et de git
-apt install -y docker.io git
+# MAJ système
+sudo apt update -y
+sudo apt upgrade -y
 
-# je démarre docker
-systemctl start docker
-systemctl enable docker
+# Dépendances pour ajouter le repo Docker
+sudo apt install -y ca-certificates curl gnupg lsb-release
+
+# Ajouter la clé GPG officielle de Docker
+sudo mkdir -m 0755 -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+# Ajouter le dépôt Docker officiel
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Mettre à jour les dépôts et installer Docker
+sudo apt update -y
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# Démarrer Docker
+sudo systemctl enable docker
+sudo systemctl start docker
 
 # install de docker compose
 DOCKER_CONFIG=/usr/libexec/docker/cli-plugins
