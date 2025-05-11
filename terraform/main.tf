@@ -19,9 +19,8 @@ resource "aws_security_group" "rds_access" {
     protocol        = "tcp"
     security_groups = [aws_security_group.ec2_sg.id]
     description     = "Autorise EC2 a acceder a RDS"
-
+    
   }
-
 
   egress {
     from_port   = 0
@@ -42,6 +41,7 @@ resource "aws_db_instance" "autonote_db" {
   password               = var.db_password                   # Mot de passe 
   publicly_accessible    = true                              # RDS accessible via Internet
   skip_final_snapshot    = true                              # Pas de snapshot à la suppression 
+  vpc_security_group_ids = [aws_security_group.rds_access.id]
 
   tags = {
     Name = "autonote-db"

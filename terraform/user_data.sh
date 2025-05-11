@@ -22,5 +22,5 @@ cd /home/ubuntu
 git clone https://github.com/nmnins/autonote-api.git
 cd autonote-api
 
-# 6. Lancer l'app (en arrière-plan)
+# 6. Lancer l'app (en arrière-plan) fail pour le moment à lancer manuellement 
 docker compose up -d
