@@ -49,7 +49,7 @@ Et pour la doc interactive : http://<IP_PUBLIQUE_EC2>:8000/docs
 
 
 
-### Installation locale
+## Installation locale
 
    ```bash
 git clone https://github.com/nmnins/autonote-api.git
@@ -64,26 +64,26 @@ Sous Windows
    ```bash
 env\Scripts\activate
 ```
-###  Lancer les tests
+##  Lancer les tests
    ```bash
 
 pytest --cov=app --cov-report=term-missing
 ```
 
-### Utilisation avec Docker
+## Utilisation avec Docker
    ```bash
 
 docker compose up –build
 ```
 
-### Infrastructure AWS via Terraform
+## Infrastructure AWS via Terraform
 
 Le dossier terraform/ contient :
 - Provisionnement automatique d'une instance RDS PostgreSQL
 - Provisionnement d’une instance EC2 Ubuntu avec Docker
 - Configuration des security groups
 
-### CI & Sécurité
+## CI & Sécurité
 
 Le pipeline GitHub Actions vérifie à chaque push :
 - Style et erreurs avec ruff
@@ -93,7 +93,7 @@ Le pipeline GitHub Actions vérifie à chaque push :
 
 📄 Pipeline : .github/workflows/ci.yml
 
-### Structure du projet
+## Structure du projet
 
 ```TEXT
 autonote-api/
@@ -110,7 +110,7 @@ autonote-api/
         └── ci.yml        # Pipeline CI GitHub Actions
 ```
 
-### Sécurité
+## Sécurité
 
 Les secrets (API_KEY, DATABASE_URL) sont injectés dynamiquement lors du déploiement via Terraform, dans un fichier .env non versionné.
 
@@ -128,7 +128,7 @@ Le provisioning complet (EC2 + RDS + configuration) est automatisé, limitant le
 - [ ] Mise en place de tests d’intégration live
 - [ ] Tests de montée en charge avec Locust
 
-### À propos
+## À propos
 
 Projet personnel pour expérimenter :
 - Infrastructure as Code (Terraform)
