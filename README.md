@@ -26,45 +26,28 @@ Ce projet m’a permis de mettre en pratique les compétences suivantes :
 
 📦 Les données sont stockées dans une base PostgreSQL AWS RDS, provisionnée automatiquement via Terraform.
 
-### Déploiement cloud (EC2 + RDS)
+## Déploiement cloud automatisé (EC2 + RDS)
+
 L’infrastructure est provisionnée automatiquement avec Terraform :
-- Une base de données PostgreSQL RDS
-- Une instance EC2 Ubuntu avec Docker installé
-- Des security groups configurés
 
-Le script user_data.sh provisionne tout sauf le fichier .env.
-Lancement de l’API : une étape manuelle est nécessaire après le déploiement.
+Une base de données PostgreSQL RDS
 
-### Étapes post-déploiement 
+Une instance EC2 Ubuntu avec Docker + Docker Compose
 
-•	Se connecter à l’instance EC2 
+Des security groups configurés
 
-   ssh -i ma-cle.pem ubuntu@<IP_PUBLIQUE_EC2>
+Un déploiement complet de l’application dès le démarrage de l’instance
 
-•	 Aller dans le dossier du projet 
+🛠️ Le fichier .env est généré automatiquement via Terraform (avec injection sécurisée de API_KEY et DATABASE_URL).
 
-```bash
-   cd autonote-api
-```
-•	Créer le fichier .env avec les informations postgresql RDS 
+Lancement de l’API : aucune action manuelle requise après terraform apply.
 
-   ```bash
-   cp copy .env.example .env 
-   nano .env
-```
-•	Renseigner les champs 
+L'IP est communiquée après le terraform apply 
 
-   API_KEY=ton_api_key
-   DATABASE_URL=postgresql://user:password@<rds-endpoint>:5432/nom_de_la_db
+Pour accéder à l'API : http://<IP_PUBLIQUE_EC2>:8000
+Et pour la doc interactive : http://<IP_PUBLIQUE_EC2>:8000/docs
 
-•	Puis lancer la commande
 
-```bash
-   docker compose up -d
-```
- L’API est ensuite disponible à l’adresse :
-
-http://<IP_PUBLIQUE_EC2>:8000
 
 ### Installation locale
 
@@ -129,13 +112,18 @@ autonote-api/
 
 ### Sécurité
 
-- Secrets gérés localement via .env
-- Accès à PostgreSQL RDS restreint à l’IP personnelle et à l’EC2
-- Aucune donnée sensible stockée dans le dépôt
+Les secrets (API_KEY, DATABASE_URL) sont injectés dynamiquement lors du déploiement via Terraform, dans un fichier .env non versionné.
+
+L’accès à PostgreSQL RDS est restreint via les security groups : seules l’instance EC2 et ton IP personnelle (si configurée) peuvent y accéder.
+
+Aucune donnée sensible (clé API, identifiants, URI) n’est stockée dans le dépôt Git.
+
+Le fichier .env est exclu du contrôle de version via .gitignore.
+
+Le provisioning complet (EC2 + RDS + configuration) est automatisé, limitant les risques d’erreurs humaines.
 
 ### Prochaines étapes
 
-- [ ] Automatiser la génération du fichier .env via Terraform (templatefile)
 - [ ] Centralisation des logs + monitoring via CloudWatch
 - [ ] Mise en place de tests d’intégration live
 - [ ] Tests de montée en charge avec Locust
