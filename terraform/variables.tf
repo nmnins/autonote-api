@@ -29,3 +29,13 @@ variable "subnet_id" {
   description = "ID du sous réseau"
   type        = string 
 }
+
+variable "API_KEY" {
+  description = "clé API" 
+  type        = string 
+}
+
+variable "DATABASE_URL" {
+  description = "URL RDS PostgreSQL"
+  type        = string
+}

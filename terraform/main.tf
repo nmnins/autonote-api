@@ -84,8 +84,13 @@ resource "aws_instance" "autonote_ec2" {
   key_name               = var.ec2_key_name
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
   subnet_id              = var.subnet_id
-  user_data              = file("./user_data.sh")  
+  user_data              = templatefile("${path.module}/user_data.tpl", {
+    API_KEY      = var.API_KEY,
+    DATABASE_URL = var.DATABASE_URL
+  })
   tags                   = {
     Name = "autonote-app-ec2"
   }
 }
+
+
