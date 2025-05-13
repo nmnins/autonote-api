@@ -89,7 +89,6 @@ Le pipeline GitHub Actions vérifie à chaque push :
 - Style et erreurs avec ruff
 - Couverture des tests avec pytest-cov
 - Vulnérabilités avec bandit et pip-audit
-- Validité du Dockerfile avec docker build
 
 📄 Pipeline : .github/workflows/ci.yml
 
